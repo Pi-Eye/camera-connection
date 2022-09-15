@@ -1,0 +1,51 @@
+{
+  "name": "camera-connection",
+  "version": "1.0.0",
+  "description": "Package for connecting with Pi-Eye camera",
+  "main": "./build/src/index.js",
+  "types": "./build/src/index.d.ts",
+  "scripts": {
+    "lint": "eslint ./**/*.ts",
+    "build": "tsc -b",
+    "pretest": "npm run build",
+    "test": "mocha ./build/**/*.test.js",
+    "coverage": "nyc npm test",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pi-Eye/camera-connection.git"
+  },
+  "author": "Bwu1324",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Pi-Eye/camera-connection/issues"
+  },
+  "homepage": "https://github.com/Pi-Eye/camera-connection#readme",
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^18.11.9",
+    "@types/ws": "^8.5.3",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "chai": "^4.3.6",
+    "cmake-js": "^7.0.0",
+    "eslint": "^8.27.0",
+    "mocha": "^10.1.0",
+    "nyc": "^15.1.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "argon2": "^0.30.2",
+    "camera-interface": "github:Pi-Eye/camera-interface",
+    "events": "^3.3.0",
+    "node-stream-processor": "github:Pi-Eye/node-stream-processor",
+    "typed-emitter": "^2.1.0",
+    "ws": "^8.11.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "utf-8-validate": "^5.0.10"
+  }
+}
