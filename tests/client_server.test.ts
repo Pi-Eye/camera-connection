@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { SPEnums } from "node-stream-processor";
+import { SPEnums } from "node-stream-processor-types";
 
 import CameraClient from "../src/client";
 import CameraSide from "../src/camera";
@@ -137,6 +137,8 @@ describe("Set new password", () => {
         new_hash.should.not.equal("$argon2id$v=19$m=65536,t=3,p=4$/7+feZK/lNVObCYiJhOuJQ$iQVbinmaMc9OWdeg8FEDJ/ueGFj8d6PtBMb+y0kl9h0");
         new_password.should.not.equal("password");
 
+        fs.writeFileSync(path.join(__dirname, "..", "..", "test-files", "test_hash_change.json"), JSON.stringify({ hash: "$argon2id$v=19$m=65536,t=3,p=4$/7+feZK/lNVObCYiJhOuJQ$iQVbinmaMc9OWdeg8FEDJ/ueGFj8d6PtBMb+y0kl9h0" }));
+        fs.writeFileSync(path.join(__dirname, "..", "..", "test-files", "test_config_change.json"), JSON.stringify({ address: "ws://localhost:8080", pwd: "password" }));
 
         done();
       });

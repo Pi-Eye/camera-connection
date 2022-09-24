@@ -40,7 +40,7 @@
     "argon2": "^0.30.2",
     "camera-interface": "github:Pi-Eye/camera-interface",
     "events": "^3.3.0",
-    "node-stream-processor": "github:Pi-Eye/node-stream-processor",
+    "node-stream-processor-types": "github:Pi-Eye/node-stream-processor-types",
     "typed-emitter": "^2.1.0",
     "ws": "^8.11.0"
   },
