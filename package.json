@@ -9,8 +9,7 @@
     "build": "tsc -b",
     "pretest": "npm run build",
     "test": "mocha ./build/**/*.test.js",
-    "coverage": "nyc npm test",
-    "postinstall": "npm run build"
+    "coverage": "nyc npm test"
   },
   "repository": {
     "type": "git",
