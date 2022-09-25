@@ -8,7 +8,7 @@
     "lint": "eslint ./**/*.ts",
     "build": "tsc -b",
     "pretest": "npm run build",
-    "test": "mocha ./build/**/*.test.js",
+    "test": "mocha ./lib/**/*.test.js",
     "coverage": "nyc npm test"
   },
   "repository": {
