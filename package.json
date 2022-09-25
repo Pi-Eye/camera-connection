@@ -2,8 +2,8 @@
   "name": "camera-connection",
   "version": "1.0.0",
   "description": "Package for connecting with Pi-Eye camera",
-  "main": "./build/src/index.js",
-  "types": "./build/src/index.d.ts",
+  "main": "./lib/src/index.js",
+  "types": "./lib/src/index.d.ts",
   "scripts": {
     "lint": "eslint ./**/*.ts",
     "build": "tsc -b",

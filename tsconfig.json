@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"incremental": true,
-		"outDir": "./build/",
+		"outDir": "./lib/",
 		"module": "CommonJS",
 		"allowJs": true,
 		"target": "es6",
