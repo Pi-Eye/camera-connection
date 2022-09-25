@@ -34,3 +34,12 @@ export type CameraSideEvents = {
   settings: (settings: AllSettings) => void;
   error: (error: Error) => void;
 }
+
+export type HashConfig = {
+  hash: string;
+}
+
+export type ClientConfig = {
+  address: string;
+  pwd: string;
+}

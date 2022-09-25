@@ -30,3 +30,10 @@ export declare type CameraSideEvents = {
     settings: (settings: AllSettings) => void;
     error: (error: Error) => void;
 };
+export declare type HashConfig = {
+    hash: string;
+};
+export declare type ClientConfig = {
+    address: string;
+    pwd: string;
+};

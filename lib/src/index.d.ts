@@ -1,3 +1,4 @@
 import CameraClient from "./client";
 import CameraSide from "./camera";
-export { CameraClient, CameraSide };
+import { HashConfig, ClientConfig } from "./types";
+export { CameraClient, CameraSide, HashConfig, ClientConfig };
