@@ -218,8 +218,8 @@ export default class CameraSide {
     this.authenticated_ = true;
     this.socket_ = socket;
 
-    this.rtt_avg_ = trip_time * 2;
-    this.rto_interval_ = this.rtt_avg_;
+    this.rtt_avg_ = 0;
+    this.rto_interval_ = 0;
     this.mean_dev_ = 0;
     this.send_queue_ = [];
     this.SendWindow();
