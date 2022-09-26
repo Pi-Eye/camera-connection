@@ -292,9 +292,10 @@ export default class CameraSide {
       this.MessageHandler(data as Buffer, socket, address);
     });
 
-    socket.on("close", () => {
+    socket.on("close", (code) => {
       this.socket_ = undefined;
       this.authenticated_ = false;
+      console.log(`Connection closed with ${address} with code: ${code}`);
       socket.removeAllListeners();
     });
 
