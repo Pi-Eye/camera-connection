@@ -92,14 +92,18 @@ export default class CameraSide {
    * Stop() - Fully stops websocket server
    */
   Stop() {
-    clearTimeout(this.ack_timeout_);
-    clearTimeout(this.rto_timeout_);
-    this.authenticated_ = false;
-    this.send_queue_ = [];
-    this.server_.clients.forEach((socket) => {
-      socket.close();
-    });
-    this.server_.close();
+    try {
+      clearTimeout(this.ack_timeout_);
+      clearTimeout(this.rto_timeout_);
+      this.authenticated_ = false;
+      this.send_queue_ = [];
+      this.server_.clients.forEach((socket) => {
+        socket.close();
+      });
+      this.server_.close();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**
@@ -179,7 +183,6 @@ export default class CameraSide {
    * @param address address of websocket
    */
   private async Auth1Handler(auth1: ClientMsg, socket: WebSocket, address: string) {
-    const trip_time = Date.now() - auth1.timestamp;
     // Parse out password
     let pwd;
     try {

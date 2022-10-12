@@ -84,9 +84,13 @@ export default class CameraClient implements CameraInterface {
    * Stop() - Fully stops websocket
    */
   Stop() {
-    clearTimeout(this.frame_timeout_);
-    this.restart_ = false;
-    this.socket_.close();
+    try {
+      clearTimeout(this.frame_timeout_);
+      this.restart_ = false;
+      this.socket_.close();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**
