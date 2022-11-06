@@ -17,14 +17,14 @@ Package for connecting with Pi-Eye camera
 
 ### Installation
 
-1. Install NPM package: camera-interface
+1. Install NPM package: camera-connection
     ```sh
     npm install https://github.com/Pi-Eye/camera-connection
     ```
 
 ## Usage
 
-### Example Camera Interface
+### Example Camera Connection
 
 ```js
 import { CameraSide, ClientSide } from "camera-connection";
