@@ -30,13 +30,13 @@ export default class CameraSide {
 
   private server_: WebSocket.Server;
   private socket_: WebSocket.WebSocket;
+  private address_: string;
 
   private all_settings_: AllSettings;
 
   private ecdh_: crypto.ECDH;
   private hash_: string;
   private secret_: Buffer;
-  private authenticated_ = false;
 
   private last_id_ = 0;
   private inflight_: Array<{ id: number, timestamp: number }> = [];
@@ -64,8 +64,6 @@ export default class CameraSide {
    * @param frame frame to queue
    */
   QueueFrame(frame: Buffer, timestamp: number, motion: boolean) {
-    if (!this.authenticated_) return;
-
     const motion_int = (motion) ? 1 : 0;
     const header = Buffer.alloc(1 + 8);
     header.writeUint8(motion_int, 0);
@@ -82,6 +80,7 @@ export default class CameraSide {
     } catch (error) {
       console.warn(`Error while encrypting frame, terminating connection. Error: ${error}`);
       this.socket_.terminate();
+      this.address_ = "";
       return;
     }
 
@@ -95,7 +94,6 @@ export default class CameraSide {
     try {
       clearTimeout(this.ack_timeout_);
       clearTimeout(this.rto_timeout_);
-      this.authenticated_ = false;
       this.send_queue_ = [];
       this.server_.clients.forEach((socket) => {
         socket.close();
@@ -110,7 +108,6 @@ export default class CameraSide {
    * CreateServer() - Creates websocket server
    */
   private CreateServer() {
-    this.authenticated_ = false;
     this.server_ = new WebSocket.Server({ port: this.port_ });
 
     this.server_.on("connection", (socket, request) => {
@@ -143,7 +140,10 @@ export default class CameraSide {
     clearInterval(this.ack_timeout_);
     this.ack_timeout_ = setTimeout(() => {
       console.warn("Did not recieve acknowledgements for 10 seconds, terminating connection");
-      try { this.socket_.terminate(); } catch { /* */ }
+      try { 
+        this.socket_.terminate();
+        this.address_ = "";
+      } catch { /* */ }
     }, 10000);
 
     if (this.inflight_[0].id == ack.id) {
@@ -218,8 +218,8 @@ export default class CameraSide {
 
     // Getting here means successful authentication
     console.log(`Authenticated successfully with ${address}`);
-    this.authenticated_ = true;
     this.socket_ = socket;
+    this.address_ = address;
 
     this.rtt_avg_ = 0;
     this.rto_interval_ = 0;
@@ -273,12 +273,14 @@ export default class CameraSide {
   private SocketHandler(socket: WebSocket.WebSocket, request: IncomingMessage) {
     const address = (request.socket.address() as AddressInfo).address + ":" + (request.socket.address() as AddressInfo).port;
     console.log(`Opened socket with: ${address}`);
-
-    if (this.authenticated_) {    // Ignore if already authenticated
-      console.log(`Already authenticated with different client, terminating connection with ${address}`);
-      socket.close();
-      return;
-    }
+    setTimeout(() => {
+      if (!this.address_ || this.address_ !== address) {
+        try {
+          socket.close();
+          console.log(`Authentication with ${address} timed out, closing connection`);
+        } catch { /* */ }
+      }
+    }, 3000);
 
     // Begin ECDH key exchange once connected
     this.ecdh_ = crypto.createECDH(CURVE_NAME);
@@ -297,7 +299,7 @@ export default class CameraSide {
 
     socket.on("close", (code) => {
       this.socket_ = undefined;
-      this.authenticated_ = false;
+      this.address_ = "";
       console.log(`Connection closed with ${address} with code: ${code}`);
       socket.removeAllListeners();
     });
@@ -321,6 +323,7 @@ export default class CameraSide {
     } catch (error) {
       console.warn(`Error while parsing message, terminating connection with ${address}. Error: ${error}`);
       this.socket_.terminate();
+      this.address_ = "";
       return;
     }
 

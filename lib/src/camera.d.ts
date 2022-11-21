@@ -8,11 +8,11 @@ export default class CameraSide {
     private ack_timeout_;
     private server_;
     private socket_;
+    private address_;
     private all_settings_;
     private ecdh_;
     private hash_;
     private secret_;
-    private authenticated_;
     private last_id_;
     private inflight_;
     private send_queue_;

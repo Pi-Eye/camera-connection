@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import WebSocket from "ws";
 import { SPEnums } from "node-stream-processor-types";
 
 import CameraClient from "../src/client";
@@ -140,6 +141,30 @@ describe("Set new password", () => {
         fs.writeFileSync(path.join(__dirname, "..", "..", "test-files", "test_hash_change.json"), JSON.stringify({ hash: "$argon2id$v=19$m=65536,t=3,p=4$/7+feZK/lNVObCYiJhOuJQ$iQVbinmaMc9OWdeg8FEDJ/ueGFj8d6PtBMb+y0kl9h0" }));
         fs.writeFileSync(path.join(__dirname, "..", "..", "test-files", "test_config_change.json"), JSON.stringify({ address: "ws://localhost:8080", pwd: "password" }));
 
+        done();
+      });
+    });
+  }).timeout(10000);
+});
+
+describe("Deny additional connections", () => {
+  const settings: AllSettings = {
+    camera: { width: 640, height: 480, format: SPEnums.Format.kRGB, quality: 75 },
+    text: { font_path: "./test/font.tff", text_position: SPEnums.TextPosition.kBottom, font_size: 9, show_date: false },
+    motion: { gaussian_size: 1, scale_denominator: 3, bg_stabil_length: 9, motion_stabil_length: 2, min_pixel_diff: 10, min_changed_pixels: 0.1, motion_fps_scale: 2 },
+    device: { device_type: SPEnums.DeviceType.kSpecific, device_choice: 0 }
+  };
+
+  it("should close connection if not authenticated", (done) => {
+
+    const camera = new CameraSide(PORT, path.join(__dirname, "..", "..", "test-files", "test_hash.json"), settings);
+    const client = new CameraClient(path.join(__dirname, "..", "..", "test-files", "test_config.json"));
+    
+    camera.events.on("ready", () => {
+      const new_client = new WebSocket("ws://127.0.0.1:8080");
+      new_client.on("close", () => {
+        client.Stop();
+        camera.Stop();
         done();
       });
     });
