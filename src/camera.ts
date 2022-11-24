@@ -64,6 +64,7 @@ export default class CameraSide {
    * @param frame frame to queue
    */
   QueueFrame(frame: Buffer, timestamp: number, motion: boolean) {
+    if (!this.secret_) return;
     const motion_int = (motion) ? 1 : 0;
     const header = Buffer.alloc(1 + 8);
     header.writeUint8(motion_int, 0);
